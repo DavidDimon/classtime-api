@@ -1,0 +1,8 @@
+db_name = // Name of db
+db_pass = // password of database
+db_user = // user from db
+db_type = // type of db: postgress, mysql etc
+db_host = // host of db: localhost for example
+db_port = // port of db
+token_password = jwt token
+database_url = // database url example: postgres://postgres:passwordHere@localhost:5434/tests
