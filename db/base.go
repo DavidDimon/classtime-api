@@ -1,6 +1,7 @@
-package models
+package db
 
 import (
+	"classtime/models"
 	"fmt"
 	"os"
 
@@ -39,7 +40,7 @@ func init() {
 	}
 
 	db = conn
-	db.Debug().AutoMigrate(&User{})
+	db.Debug().AutoMigrate(&models.User{})
 }
 
 func GetDB() *gorm.DB {

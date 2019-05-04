@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	db "classtime/db"
 	"classtime/models"
 	u "classtime/utils"
 	"encoding/json"
@@ -8,7 +9,6 @@ import (
 )
 
 var CreateUser = func(w http.ResponseWriter, r *http.Request) {
-
 	user := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(user) //decode the request body into struct and failed if any error occur
 	if err != nil {
@@ -16,12 +16,11 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := user.Create() //Create user
+	resp := db.Create(user) //Create user
 	u.Respond(w, resp)
 }
 
 var Authenticate = func(w http.ResponseWriter, r *http.Request) {
-
 	user := &models.User{}
 	err := json.NewDecoder(r.Body).Decode(user) //decode the request body into struct and failed if any error occur
 	if err != nil {
@@ -29,22 +28,20 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := models.Login(user.Email, user.Password)
+	resp := db.Login(user.Email, user.Password)
 	u.Respond(w, resp)
 }
 
 var GetUser = func(w http.ResponseWriter, r *http.Request) {
-
 	id := r.Context().Value("user").(uint)
-	data := models.GetUser(id)
+	data := db.GetUser(id)
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
 }
 
 var GetUsers = func(w http.ResponseWriter, r *http.Request) {
-
-	data := models.GetUsers()
+	data := db.GetUsers()
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
