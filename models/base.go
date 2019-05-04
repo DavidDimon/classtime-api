@@ -28,7 +28,7 @@ func init() {
 	if dbType == "postgres" {
 		dbURI = fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
 	} else {
-		dbURI = fmt.Sprintf("%s:%s@/%s", username, password, dbName)
+		dbURI = fmt.Sprintf("%s:%s@/%s?parseTime=true", username, password, dbName)
 	}
 	fmt.Println(dbURI)
 
