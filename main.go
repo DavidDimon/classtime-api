@@ -15,9 +15,9 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/api/user/new", controllers.CreateUser).Methods("POST")
-	router.HandleFunc("/api/user/login", controllers.Authenticate).Methods("POST")
-	router.HandleFunc("/api/users", controllers.GetUsers).Methods("GET")
+	router.HandleFunc("/user/create", controllers.CreateUser).Methods("POST")
+	router.HandleFunc("/user/login", controllers.Authenticate).Methods("POST")
+	router.HandleFunc("/users", controllers.GetUsers).Methods("GET")
 
 	router.Use(app.JwtAuthentication) //attach JWT auth middleware
 
