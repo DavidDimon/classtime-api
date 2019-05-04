@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/joho/godotenv"
 )
 
@@ -22,11 +22,17 @@ func init() {
 	password := os.Getenv("db_pass")
 	dbName := os.Getenv("db_name")
 	dbHost := os.Getenv("db_host")
+	dbType := os.Getenv("db_type")
+	var dbURI string
 
-	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
+	if dbType == "postgres" {
+		dbURI = fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, username, dbName, password)
+	} else {
+		dbURI = fmt.Sprintf("%s:%s@/%s", username, password, dbName)
+	}
 	fmt.Println(dbURI)
 
-	conn, err := gorm.Open("postgres", dbURI)
+	conn, err := gorm.Open("mysql", dbURI)
 	if err != nil {
 		fmt.Print(err)
 	}

@@ -42,7 +42,7 @@ func (user *User) Validate() (map[string]interface{}, bool) {
 	temp := &User{}
 
 	//check for errors and duplicate emails
-	err := GetDB().Table("user").Where("email = ?", user.Email).First(temp).Error
+	err := GetDB().Table("users").Where("email = ?", user.Email).First(temp).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return u.Message(false, "Connection error. Please retry"), false
 	}
@@ -84,7 +84,7 @@ func (user *User) Create() map[string]interface{} {
 func Login(email, password string) map[string]interface{} {
 
 	user := &User{}
-	err := GetDB().Table("user").Where("email = ?", email).First(user).Error
+	err := GetDB().Table("users").Where("email = ?", email).First(user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return u.Message(false, "Email address not found")
@@ -112,7 +112,7 @@ func Login(email, password string) map[string]interface{} {
 
 func GetUser(u uint) *User {
 	user := &User{}
-	GetDB().Table("user").Where("id = ?", u).First(user)
+	GetDB().Table("users").Where("id = ?", u).First(user)
 	if user.Email == "" { //User not found!
 		return nil
 	}
@@ -123,7 +123,7 @@ func GetUser(u uint) *User {
 
 func GetUsers() []*User {
 	users := make([]*User, 0)
-	err := GetDB().Table("user").Find(&users).Error
+	err := GetDB().Table("users").Find(&users).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil
