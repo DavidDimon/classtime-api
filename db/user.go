@@ -18,6 +18,7 @@ func Create(user *models.User) map[string]interface{} {
 
 	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	user.Password = string(hashedPassword)
+	user.Role = 0
 
 	GetDB().Create(user)
 

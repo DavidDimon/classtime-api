@@ -16,6 +16,14 @@ type Token struct {
 	jwt.StandardClaims
 }
 
+/*
+	roles:
+	0 - student
+	1 - teacher
+	2 - secretary
+	3 - admin
+*/
+
 //a struct to rep user account
 type User struct {
 	gorm.Model
@@ -23,7 +31,7 @@ type User struct {
 	Password    string        `json:"password"`
 	Token       string        `json:"token";sql:"-"`
 	Disciplines []*Discipline `gorm:"many2many:user_disciplines;"`
-	Role        string        `json:"string"`
+	Role        uint          `json:"int"`
 }
 
 func ValidateEmail(user *User) (map[string]interface{}, bool) {
