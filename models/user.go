@@ -19,9 +19,10 @@ type Token struct {
 //a struct to rep user account
 type User struct {
 	gorm.Model
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Token    string `json:"token";sql:"-"`
+	Email       string        `json:"email"`
+	Password    string        `json:"password"`
+	Token       string        `json:"token";sql:"-"`
+	Disciplines []*Discipline `gorm:"many2many:user_disciplines;"`
 }
 
 func ValidateEmail(user *User) (map[string]interface{}, bool) {
