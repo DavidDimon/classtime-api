@@ -31,7 +31,7 @@ type User struct {
 	Password    string        `json:"password"`
 	Token       string        `json:"token";sql:"-"`
 	Disciplines []*Discipline `gorm:"many2many:user_disciplines;"`
-	Role        uint          `json:"int"`
+	Role        uint          `json:"role"`
 }
 
 func ValidateEmail(user *User) (map[string]interface{}, bool) {
