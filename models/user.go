@@ -28,7 +28,8 @@ type Token struct {
 type User struct {
 	gorm.Model
 	Email       string        `json:"email"`
-	Password    string        `json:"password"`
+	Password    string        `json:"-"`
+	Name        string        `json:"name"`
 	Token       string        `json:"token";sql:"-"`
 	Disciplines []*Discipline `gorm:"many2many:user_disciplines;"`
 	Role        uint          `json:"role"`
