@@ -20,25 +20,34 @@ func CreateDiscipline(discipline *models.Discipline) map[string]interface{} {
 
 func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]interface{} {
 	disciplineModel := &models.Discipline{}
-	GetDB().First(disciplineModel, "id = ?", id)
+	GetDB().First(&disciplineModel, "id = ?", id)
+	users := make([]*models.User, 0)
+	GetDB().Find(&users, "id in (?)", discipline.Users)
 
-	disciplineModel.Name = discipline.Name
-	disciplineModel.Term = discipline.Term
+	if len(discipline.Name) > 0 {
+		disciplineModel.Name = discipline.Name
+	}
 
-	err := GetDB().Save(disciplineModel).Error
+	if len(discipline.Term) > 0 {
+		disciplineModel.Term = discipline.Term
+	}
+
+	GetDB().Model(&disciplineModel).Association("Users").Append(&users)
+
+	err := GetDB().Save(&disciplineModel).Error
 
 	if err != nil {
 		return u.Message(false, "Failed to update discipline, connection error.")
 	}
 
 	response := u.Message(true, "Discipline has been updated")
-	response["discipline"] = discipline
+	response["discipline"] = &disciplineModel
 	return response
 }
 
 func GetDisciplines() []*models.Discipline {
 	disciplines := make([]*models.Discipline, 0)
-	err := GetDB().Table("disciplines").Find(&disciplines).Error
+	err := GetDB().Preload("Users").Table("disciplines").Find(&disciplines).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil

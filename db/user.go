@@ -70,7 +70,7 @@ func Login(email, password string) map[string]interface{} {
 
 func GetUser(id string) *models.User {
 	user := &models.User{}
-	GetDB().Table("users").Where("id = ?", id).First(user)
+	GetDB().Preload("Disciplines").Table("users").Where("id = ?", id).First(user)
 	if user.Email == "" { //User not found!
 		return nil
 	}
@@ -81,7 +81,7 @@ func GetUser(id string) *models.User {
 
 func GetUsers() []*models.User {
 	users := make([]*models.User, 0)
-	err := GetDB().Table("users").Find(&users).Error
+	err := GetDB().Preload("Disciplines").Table("users").Find(&users).Error
 	if err != nil {
 		fmt.Println(err)
 		return nil
