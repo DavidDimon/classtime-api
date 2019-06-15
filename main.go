@@ -15,13 +15,18 @@ func main() {
 
 	router := mux.NewRouter()
 
+	// users
 	router.HandleFunc("/user/create", controllers.CreateUser).Methods("POST")
 	router.HandleFunc("/user/login", controllers.Authenticate).Methods("GET")
 	router.HandleFunc("/users", controllers.GetUsers).Methods("GET")
+	router.HandleFunc("/user/{id:[0-9]+}", controllers.GetUser).Methods("GET")
+
+	// disciplines
+	router.HandleFunc("/discipline/create", controllers.CreateDiscipline).Methods("POST")
+	router.HandleFunc("/discipline/{id:[0-9]+}", controllers.UpdateDiscipline).Methods("PUT")
+	router.HandleFunc("/disciplines", controllers.GetDisciplines).Methods("GET")
 
 	router.Use(app.JwtAuthentication) //attach JWT auth middleware
-
-	//router.NotFoundHandler = app.NotFoundHandler
 
 	port := os.Getenv("PORT")
 	if port == "" {

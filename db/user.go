@@ -11,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func Create(user *models.User) map[string]interface{} {
+func CreateUser(user *models.User) map[string]interface{} {
 	if resp, ok := validate(user); !ok {
 		return resp
 	}
@@ -68,9 +68,9 @@ func Login(email, password string) map[string]interface{} {
 	return resp
 }
 
-func GetUser(u uint) *models.User {
+func GetUser(id string) *models.User {
 	user := &models.User{}
-	GetDB().Table("users").Where("id = ?", u).First(user)
+	GetDB().Table("users").Where("id = ?", id).First(user)
 	if user.Email == "" { //User not found!
 		return nil
 	}

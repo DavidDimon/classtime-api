@@ -11,3 +11,13 @@ type Discipline struct {
 	Users []*User `gorm:"many2many:user_disciplines;"`
 	Grid  Grid    `gorm:"foreignkey:DisciplineId"`
 }
+
+/*
+DisciplineJSON struct used by update discipline with users ids
+*/
+type DisciplineJSON struct {
+	Name   string
+	Term   string
+	Users  []uint
+	GridID uint
+}

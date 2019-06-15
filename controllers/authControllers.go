@@ -8,6 +8,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
 var CreateUser = func(w http.ResponseWriter, r *http.Request) {
@@ -18,11 +20,11 @@ var CreateUser = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := db.Create(user) //Create user
+	resp := db.CreateUser(user) //Create user
 	u.Respond(w, resp)
 }
 
-var Authenticate = func(w http.ResponseWriter, r *http.Request) {
+func Authenticate(w http.ResponseWriter, r *http.Request) {
 	auth := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 
 	if len(auth) != 2 || auth[0] != "Basic" {
@@ -42,15 +44,16 @@ var Authenticate = func(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
-var GetUser = func(w http.ResponseWriter, r *http.Request) {
-	id := r.Context().Value("user").(uint)
+func GetUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id := params["id"]
 	data := db.GetUser(id)
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)
 }
 
-var GetUsers = func(w http.ResponseWriter, r *http.Request) {
+func GetUsers(w http.ResponseWriter, r *http.Request) {
 	data := db.GetUsers()
 	resp := u.Message(true, "success")
 	resp["data"] = data
