@@ -16,8 +16,9 @@ type Discipline struct {
 DisciplineJSON struct used by update discipline with users ids
 */
 type DisciplineJSON struct {
-	Name   string
-	Term   string
-	Users  []uint
-	GridID uint
+	Name        string
+	Term        string
+	Users       []uint
+	UsersRemove []uint
+	GridID      uint
 }

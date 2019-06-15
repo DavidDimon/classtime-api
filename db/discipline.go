@@ -22,7 +22,9 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 	disciplineModel := &models.Discipline{}
 	GetDB().First(&disciplineModel, "id = ?", id)
 	users := make([]*models.User, 0)
+	usersRemove := make([]*models.User, 0)
 	GetDB().Find(&users, "id in (?)", discipline.Users)
+	GetDB().Find(&usersRemove, "id in (?)", discipline.UsersRemove)
 
 	if len(discipline.Name) > 0 {
 		disciplineModel.Name = discipline.Name
@@ -33,6 +35,7 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 	}
 
 	GetDB().Model(&disciplineModel).Association("Users").Append(&users)
+	GetDB().Model(&disciplineModel).Association("Users").Delete(&usersRemove)
 
 	err := GetDB().Save(&disciplineModel).Error
 
