@@ -4,6 +4,7 @@ import (
 	"classtime/models"
 	u "classtime/utils"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/dgrijalva/jwt-go"
@@ -70,12 +71,10 @@ func Login(email, password string) map[string]interface{} {
 
 func GetUser(id string) *models.User {
 	user := &models.User{}
-	GetDB().Preload("Disciplines").Table("users").Where("id = ?", id).First(user)
+	GetDB().Preload("Disciplines").Table("users").First(user, "id = ?", id)
 	if user.Email == "" { //User not found!
 		return nil
 	}
-
-	user.Password = ""
 	return user
 }
 
@@ -88,6 +87,13 @@ func GetUsers() []*models.User {
 	}
 
 	return users
+}
+
+func GetUserAuthenticated(req *http.Request) *models.User {
+	user := &models.User{}
+	id := req.Context().Value("user")
+	GetDB().Table("users").First(user, "id = ?", id)
+	return user
 }
 
 func ValidateDuplicated(user *models.User) (map[string]interface{}, bool) {

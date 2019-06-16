@@ -11,6 +11,10 @@ import (
 )
 
 func CreateDiscipline(w http.ResponseWriter, r *http.Request) {
+	if HasPermission(w, r, 2) == false {
+		return
+	}
+
 	discipline := &models.Discipline{}
 	err := json.NewDecoder(r.Body).Decode(discipline)
 	if err != nil {
@@ -23,6 +27,9 @@ func CreateDiscipline(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpdateDiscipline(w http.ResponseWriter, r *http.Request) {
+	if HasPermission(w, r, 2) == false {
+		return
+	}
 	discipline := &models.DisciplineJSON{}
 	params := mux.Vars(r)
 	id := params["id"]
@@ -37,7 +44,8 @@ func UpdateDiscipline(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDisciplines(w http.ResponseWriter, r *http.Request) {
-	data := db.GetDisciplines()
+	user := db.GetUserAuthenticated(r)
+	data := db.GetDisciplines(user)
 	resp := u.Message(true, "success")
 	resp["data"] = data
 	u.Respond(w, resp)

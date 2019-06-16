@@ -13,6 +13,10 @@ func CreateDiscipline(discipline *models.Discipline) map[string]interface{} {
 		return u.Message(false, "Failed to create discipline, connection error.")
 	}
 
+	grid := &models.Grid{}
+	grid.DisciplineId = discipline.ID
+	GetDB().Create(grid)
+
 	response := u.Message(true, "Discipline has been created")
 	response["discipline"] = discipline
 	return response
@@ -44,13 +48,20 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 	}
 
 	response := u.Message(true, "Discipline has been updated")
+	GetDB().Preload("Users").Preload("Grid").First(&disciplineModel, "id = ?", id)
 	response["discipline"] = &disciplineModel
 	return response
 }
 
-func GetDisciplines() []*models.Discipline {
+func GetDisciplines(user *models.User) []*models.Discipline {
 	disciplines := make([]*models.Discipline, 0)
-	err := GetDB().Preload("Users").Table("disciplines").Find(&disciplines).Error
+	var err error
+	if user.Role >= 2 {
+		err = GetDB().Preload("Users").Preload("Grid").Table("disciplines").Find(&disciplines).Error
+	} else {
+		err = GetDB().Preload("Grid").Model(&user).Related(&disciplines, "Disciplines").Error
+	}
+
 	if err != nil {
 		fmt.Println(err)
 		return nil

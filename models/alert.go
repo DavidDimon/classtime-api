@@ -8,6 +8,9 @@ import (
 
 type Alert struct {
 	gorm.Model
-	GridId uint       `json:"gridId"`
-	Date   *time.Time `json:"date"`
+	GridId   uint       `json:"gridId"`
+	Message  string     `json:"message"`
+	Username string     `json:"user"`
+	UserId   uint       `json:"-"`
+	Date     *time.Time `json:"date"`
 }

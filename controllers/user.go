@@ -54,6 +54,10 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
+	if HasPermission(w, r, 2) == false {
+		return
+	}
+
 	data := db.GetUsers()
 	resp := u.Message(true, "success")
 	resp["data"] = data

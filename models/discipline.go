@@ -6,10 +6,11 @@ import (
 
 type Discipline struct {
 	gorm.Model
-	Name  string  `json:"name"`
-	Term  string  `json:"term"` // term = semester
-	Users []*User `gorm:"many2many:user_disciplines;"`
-	Grid  Grid    `gorm:"foreignkey:DisciplineId"`
+	Name     string  `json:"name"`
+	Term     string  `json:"term"` // term = semester
+	Hashcode string  `json:"hashcode"`
+	Users    []*User `gorm:"many2many:user_disciplines;"`
+	Grid     Grid    `gorm:"foreignkey:DisciplineId"`
 }
 
 /*

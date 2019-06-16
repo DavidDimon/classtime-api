@@ -26,6 +26,11 @@ func main() {
 	router.HandleFunc("/discipline/{id:[0-9]+}", controllers.UpdateDiscipline).Methods("PUT")
 	router.HandleFunc("/disciplines", controllers.GetDisciplines).Methods("GET")
 
+	// grid
+	router.HandleFunc("/grid/{id:[0-9]+}/add-alert", controllers.AddAlert).Methods("PUT")
+	router.HandleFunc("/grid/{id:[0-9]+}", controllers.GetGrid).Methods("GET")
+	router.HandleFunc("/alert/{id:[0-9]+}", controllers.RemoveAlert).Methods("DELETE")
+
 	router.Use(app.JwtAuthentication) //attach JWT auth middleware
 
 	port := os.Getenv("PORT")
