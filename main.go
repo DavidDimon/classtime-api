@@ -27,7 +27,7 @@ func main() {
 	router.HandleFunc("/disciplines", controllers.GetDisciplines).Methods("GET")
 
 	// grid
-	router.HandleFunc("/grid/{id:[0-9]+}/add-alert", controllers.AddAlert).Methods("PUT")
+	router.HandleFunc("/grid/{id:[0-9]+}/add-alert", controllers.AddAlert).Methods("POST")
 	router.HandleFunc("/grid/{id:[0-9]+}", controllers.GetGrid).Methods("GET")
 	router.HandleFunc("/alert/{id:[0-9]+}", controllers.RemoveAlert).Methods("DELETE")
 

@@ -45,6 +45,9 @@ func Authenticate(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
+	if HasPermission(w, r, 2) == false {
+		return
+	}
 	params := mux.Vars(r)
 	id := params["id"]
 	data := db.GetUser(id)
