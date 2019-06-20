@@ -6,7 +6,11 @@ import (
 	"fmt"
 )
 
-func CreateDiscipline(discipline *models.Discipline) map[string]interface{} {
+func CreateDiscipline(disciplineJSON *models.DisciplineJSON) map[string]interface{} {
+	discipline := models.Discipline{}
+	discipline.Name = disciplineJSON.Name
+	discipline.Term = disciplineJSON.Term
+	discipline.WeekDays = models.ParseWeekDays(disciplineJSON.WeekDays)
 	GetDB().Create(discipline)
 
 	if discipline.ID <= 0 {
@@ -38,8 +42,17 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 		disciplineModel.Term = discipline.Term
 	}
 
-	GetDB().Model(&disciplineModel).Association("Users").Append(&users)
-	GetDB().Model(&disciplineModel).Association("Users").Delete(&usersRemove)
+	if len(discipline.WeekDays) > 0 {
+		disciplineModel.WeekDays = models.ParseWeekDays(discipline.WeekDays)
+	}
+
+	if len(users) > 0 {
+		GetDB().Model(&disciplineModel).Association("Users").Append(&users)
+	}
+
+	if len(usersRemove) > 0 {
+		GetDB().Model(&disciplineModel).Association("Users").Delete(&usersRemove)
+	}
 
 	err := GetDB().Save(&disciplineModel).Error
 
@@ -49,6 +62,7 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 
 	response := u.Message(true, "Discipline has been updated")
 	GetDB().Preload("Users").Preload("Grid").First(&disciplineModel, "id = ?", id)
+	disciplineModel.WeekDaysArray = models.GetDays(disciplineModel.WeekDays)
 	response["discipline"] = &disciplineModel
 	return response
 }
@@ -60,6 +74,12 @@ func GetDisciplines(user *models.User) []*models.Discipline {
 		err = GetDB().Preload("Users").Preload("Grid").Table("disciplines").Find(&disciplines).Error
 	} else {
 		err = GetDB().Preload("Grid").Model(&user).Related(&disciplines, "Disciplines").Error
+	}
+
+	for _, value := range disciplines {
+		if value.WeekDays != "" {
+			value.WeekDaysArray = models.GetDays(value.WeekDays)
+		}
 	}
 
 	if err != nil {
