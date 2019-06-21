@@ -19,6 +19,7 @@ type Discipline struct {
 	Grid          Grid     `gorm:"foreignkey:DisciplineId"`
 	WeekDays      string   `json:"-"`
 	WeekDaysArray []string `gorm:"-" json:"weekDays"`
+	Classroom     string   `json:"classroom"`
 }
 
 /*
@@ -31,6 +32,7 @@ type DisciplineJSON struct {
 	UsersRemove []uint
 	WeekDays    []string
 	GridID      uint
+	Classroom   string
 }
 
 /*

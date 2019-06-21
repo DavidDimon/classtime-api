@@ -10,6 +10,7 @@ func CreateDiscipline(disciplineJSON *models.DisciplineJSON) map[string]interfac
 	discipline := models.Discipline{}
 	discipline.Name = disciplineJSON.Name
 	discipline.Term = disciplineJSON.Term
+	discipline.Classroom = disciplineJSON.Classroom
 	discipline.WeekDays = models.ParseWeekDays(disciplineJSON.WeekDays)
 	GetDB().Create(discipline)
 
@@ -42,6 +43,10 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 		disciplineModel.Term = discipline.Term
 	}
 
+	if len(discipline.Classroom) > 0 {
+		disciplineModel.Classroom = discipline.Classroom
+	}
+
 	if len(discipline.WeekDays) > 0 {
 		disciplineModel.WeekDays = models.ParseWeekDays(discipline.WeekDays)
 	}
@@ -63,6 +68,22 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 	response := u.Message(true, "Discipline has been updated")
 	GetDB().Preload("Users").Preload("Grid").First(&disciplineModel, "id = ?", id)
 	disciplineModel.WeekDaysArray = models.GetDays(disciplineModel.WeekDays)
+	response["discipline"] = &disciplineModel
+	return response
+}
+
+func UpdateClassroom(id string, classroom string) map[string]interface{} {
+	disciplineModel := &models.Discipline{}
+	GetDB().First(&disciplineModel, "id = ?", id)
+	disciplineModel.Classroom = classroom
+
+	err := GetDB().Save(&disciplineModel).Error
+
+	if err != nil {
+		return u.Message(false, "Failed to update discipline, connection error.")
+	}
+
+	response := u.Message(true, "Discipline has been updated")
 	response["discipline"] = &disciplineModel
 	return response
 }

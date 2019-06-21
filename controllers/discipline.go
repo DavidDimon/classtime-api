@@ -43,6 +43,23 @@ func UpdateDiscipline(w http.ResponseWriter, r *http.Request) {
 	u.Respond(w, resp)
 }
 
+func UpdateClassroom(w http.ResponseWriter, r *http.Request) {
+	if HasPermission(w, r, 1) == false {
+		return
+	}
+	discipline := &models.DisciplineJSON{}
+	params := mux.Vars(r)
+	id := params["id"]
+	err := json.NewDecoder(r.Body).Decode(discipline)
+	if err != nil {
+		u.Respond(w, u.Message(false, "Invalid request"))
+		return
+	}
+
+	resp := db.UpdateClassroom(id, discipline.Classroom)
+	u.Respond(w, resp)
+}
+
 func GetDisciplines(w http.ResponseWriter, r *http.Request) {
 	user := db.GetUserAuthenticated(r)
 	data := db.GetDisciplines(user)

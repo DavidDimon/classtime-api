@@ -24,6 +24,7 @@ func main() {
 	// disciplines
 	router.HandleFunc("/discipline/create", controllers.CreateDiscipline).Methods("POST")
 	router.HandleFunc("/discipline/{id:[0-9]+}", controllers.UpdateDiscipline).Methods("PUT")
+	router.HandleFunc("/discipline/{id:[0-9]+}/classroom", controllers.UpdateClassroom).Methods("PUT")
 	router.HandleFunc("/disciplines", controllers.GetDisciplines).Methods("GET")
 
 	// grid
