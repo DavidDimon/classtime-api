@@ -13,4 +13,5 @@ type Alert struct {
 	Username string     `json:"user"`
 	UserId   uint       `json:"-"`
 	Date     *time.Time `json:"date"`
+	Level    string     `json:"level"`
 }

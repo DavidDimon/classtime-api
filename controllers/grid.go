@@ -51,3 +51,13 @@ func GetGrid(w http.ResponseWriter, r *http.Request) {
 	resp["data"] = data
 	u.Respond(w, resp)
 }
+
+func GetAlertsDay(w http.ResponseWriter, r *http.Request) {
+	user := db.GetUserAuthenticated(r)
+	params := mux.Vars(r)
+	day := params["day"]
+	data := db.GetAlertsOfDay(day, user)
+	resp := u.Message(true, "success")
+	resp["data"] = data
+	u.Respond(w, resp)
+}

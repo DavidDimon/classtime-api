@@ -3,6 +3,8 @@ package db
 import (
 	"classtime/models"
 	u "classtime/utils"
+	"strconv"
+	"time"
 )
 
 func AddAlert(id string, user *models.User, alert *models.Alert) map[string]interface{} {
@@ -31,7 +33,7 @@ func RemoveAlert(id string, user *models.User) map[string]interface{} {
 	if alert.ID == 0 { //alert not found!
 		return nil
 	}
-	if (alert.UserId != user.ID && user.Role < 1) {
+	if alert.UserId != user.ID && user.Role < 1 {
 		return u.Message(false, "Permission denied")
 	}
 
@@ -48,4 +50,14 @@ func GetGrid(id string) *models.Grid {
 	grid := &models.Grid{}
 	GetDB().Preload("Alerts").Table("grids").Find(&grid, "id = ?", id)
 	return grid
+}
+
+func GetAlertsOfDay(day string, user *models.User) []*models.Alert {
+	_, indexDay := models.FindDay(day)
+	alerts := make([]*models.Alert, 0)
+	discipline := &models.Discipline{}
+	t := time.Now()
+	GetDB().Preload("Grid").Where("week_days LIKE ?", "%"+strconv.Itoa(indexDay)+"%").First(&discipline)
+	GetDB().Find(&alerts, "grid_id = ? AND (dayofweek(date) - 1) = ? AND date > ?", discipline.Grid.ID, indexDay, t.Format("2006-01-02"))
+	return alerts
 }

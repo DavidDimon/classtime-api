@@ -29,6 +29,7 @@ func main() {
 	// grid
 	router.HandleFunc("/grid/{id:[0-9]+}/add-alert", controllers.AddAlert).Methods("POST")
 	router.HandleFunc("/grid/{id:[0-9]+}", controllers.GetGrid).Methods("GET")
+	router.HandleFunc("/alerts/{day}", controllers.GetAlertsDay).Methods("GET")
 	router.HandleFunc("/alert/{id:[0-9]+}", controllers.RemoveAlert).Methods("DELETE")
 
 	router.Use(app.JwtAuthentication) //attach JWT auth middleware

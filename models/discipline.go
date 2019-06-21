@@ -36,8 +36,8 @@ type DisciplineJSON struct {
 /*
 FindDay by string day
 */
-func FindDay(array []string, search string) (string, int) {
-	for index, value := range array {
+func FindDay(search string) (string, int) {
+	for index, value := range days {
 		if strings.ToLower(value) == strings.ToLower(search) {
 			return value, index
 		}
@@ -54,7 +54,7 @@ result = "0,1"
 func ParseWeekDays(weekDays []string) string {
 	var result []int
 	for _, value := range weekDays {
-		day, index := FindDay(days, value)
+		day, index := FindDay(value)
 		if day != "Invalid day" {
 			result = append(result, index)
 		}
@@ -72,7 +72,7 @@ func GetDays(weekDays string) []string {
 	weekDaysArray := strings.Split(weekDays, ",")
 	for _, value := range weekDaysArray {
 		index, _ := strconv.Atoi(value)
-		day, _ := FindDay(days, days[index])
+		day, _ := FindDay(days[index])
 		if day != "Invalid day" {
 			result = append(result, day)
 		}
