@@ -12,7 +12,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CreateUser(user *models.User) map[string]interface{} {
+func CreateUser(userCreate *models.UserCreate) map[string]interface{} {
+	user := &models.User{}
+	user.Name = userCreate.Name
+	user.Password = userCreate.Password
+	user.StudentID = userCreate.StudentID
+	user.Email = userCreate.Email
 	if resp, ok := validate(user); !ok {
 		return resp
 	}

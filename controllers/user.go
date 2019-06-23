@@ -13,7 +13,7 @@ import (
 )
 
 var CreateUser = func(w http.ResponseWriter, r *http.Request) {
-	user := &models.User{}
+	user := &models.UserCreate{}
 	err := json.NewDecoder(r.Body).Decode(user) //decode the request body into struct and failed if any error occur
 	if err != nil {
 		u.Respond(w, u.Message(false, "Invalid request"))
@@ -41,6 +41,10 @@ func Authenticate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := db.Login(strings.ToLower(pair[0]), pair[1])
+	if resp["status"] == false {
+		w.WriteHeader(http.StatusUnauthorized)
+	}
+
 	u.Respond(w, resp)
 }
 

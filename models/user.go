@@ -36,6 +36,14 @@ type User struct {
 	StudentID   string        `json:"studentId"`
 }
 
+//UserCreate is struct to create a new user
+type UserCreate struct {
+	Email     string `json:"email"`
+	Password  string `json:"password"`
+	Name      string `json:"name"`
+	StudentID string `json:"studentId"`
+}
+
 func ValidateEmail(user *User) (map[string]interface{}, bool) {
 	if !strings.Contains(user.Email, "@") {
 		return u.Message(false, "Email address is required"), false
