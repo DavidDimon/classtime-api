@@ -4,6 +4,7 @@ import (
 	u "classtime/utils"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -12,14 +13,16 @@ var days = []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Fri
 
 type Discipline struct {
 	gorm.Model
-	Name          string   `json:"name"`
-	Term          string   `json:"term"` // term = semester
-	Hashcode      string   `json:"hashcode"`
-	Users         []*User  `gorm:"many2many:user_disciplines;"`
-	Grid          Grid     `gorm:"foreignkey:DisciplineId"`
-	WeekDays      string   `json:"-"`
-	WeekDaysArray []string `gorm:"-" json:"weekDays"`
-	Classroom     string   `json:"classroom"`
+	Name          string     `json:"name"`
+	Term          string     `json:"term"` // term = semester
+	Hashcode      string     `json:"hashcode"`
+	Users         []*User    `gorm:"many2many:user_disciplines;"`
+	Grid          Grid       `gorm:"foreignkey:DisciplineId"`
+	WeekDays      string     `json:"-"`
+	WeekDaysArray []string   `gorm:"-" json:"weekDays"`
+	Classroom     string     `json:"classroom"`
+	BeginAt       *time.Time `json:"beginAt"`
+	EndAt         *time.Time `json:"endAt"`
 }
 
 /*
@@ -33,6 +36,8 @@ type DisciplineJSON struct {
 	WeekDays    []string
 	GridID      uint
 	Classroom   string
+	BeginAt     *time.Time
+	EndAt       *time.Time
 }
 
 /*

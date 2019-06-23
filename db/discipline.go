@@ -12,6 +12,8 @@ func CreateDiscipline(disciplineJSON *models.DisciplineJSON) map[string]interfac
 	discipline.Term = disciplineJSON.Term
 	discipline.Classroom = disciplineJSON.Classroom
 	discipline.WeekDays = models.ParseWeekDays(disciplineJSON.WeekDays)
+	discipline.BeginAt = disciplineJSON.BeginAt
+	discipline.EndAt = disciplineJSON.EndAt
 	GetDB().Create(discipline)
 
 	if discipline.ID <= 0 {
