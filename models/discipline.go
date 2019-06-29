@@ -16,7 +16,7 @@ type Discipline struct {
 	Name          string     `json:"name"`
 	Term          string     `json:"term"` // term = semester
 	Hashcode      string     `json:"hashcode"`
-	Users         []*User    `gorm:"many2many:user_disciplines;"`
+	Users         []*User    `gorm:"many2many:user_disciplines" json:"users"`
 	Grid          Grid       `gorm:"foreignkey:DisciplineId"`
 	WeekDays      string     `json:"-"`
 	WeekDaysArray []string   `gorm:"-" json:"weekDays"`

@@ -96,7 +96,7 @@ func GetDisciplines(user *models.User) []*models.Discipline {
 	if user.Role >= 2 {
 		err = GetDB().Preload("Users").Preload("Grid").Table("disciplines").Find(&disciplines).Error
 	} else {
-		err = GetDB().Preload("Grid").Model(&user).Related(&disciplines, "Disciplines").Error
+		err = GetDB().Preload("Grid").Preload("Users").Model(&user).Related(&disciplines, "Disciplines").Error
 	}
 
 	for _, value := range disciplines {
