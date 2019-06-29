@@ -47,6 +47,7 @@ func UpdateClassroom(w http.ResponseWriter, r *http.Request) {
 	if HasPermission(w, r, 1) == false {
 		return
 	}
+	user := db.GetUserAuthenticated(r)
 	discipline := &models.DisciplineJSON{}
 	params := mux.Vars(r)
 	id := params["id"]
@@ -56,7 +57,7 @@ func UpdateClassroom(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := db.UpdateClassroom(id, discipline.Classroom)
+	resp := db.UpdateClassroom(id, discipline.Classroom, user)
 	u.Respond(w, resp)
 }
 

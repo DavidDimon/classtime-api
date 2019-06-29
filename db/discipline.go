@@ -4,6 +4,7 @@ import (
 	"classtime/models"
 	u "classtime/utils"
 	"fmt"
+	"time"
 )
 
 func CreateDiscipline(disciplineJSON *models.DisciplineJSON) map[string]interface{} {
@@ -74,9 +75,9 @@ func UpdateDiscipline(id string, discipline *models.DisciplineJSON) map[string]i
 	return response
 }
 
-func UpdateClassroom(id string, classroom string) map[string]interface{} {
+func UpdateClassroom(id string, classroom string, user *models.User) map[string]interface{} {
 	disciplineModel := &models.Discipline{}
-	GetDB().First(&disciplineModel, "id = ?", id)
+	GetDB().Preload("Grid").First(&disciplineModel, "id = ?", id)
 	disciplineModel.Classroom = classroom
 
 	err := GetDB().Save(&disciplineModel).Error
@@ -84,6 +85,16 @@ func UpdateClassroom(id string, classroom string) map[string]interface{} {
 	if err != nil {
 		return u.Message(false, "Failed to update discipline, connection error.")
 	}
+
+	alert := &models.Alert{}
+	alert.GridId = disciplineModel.Grid.ID
+	alert.Username = user.Name
+	alert.UserId = user.ID
+	date := time.Now()
+	alert.Date = &date
+	alert.Message = "New classroom: " + classroom
+	GetDB().Create(&alert)
+	GetDB().Model(&disciplineModel.Grid).Association("Alerts").Append(&alert)
 
 	response := u.Message(true, "Discipline has been updated")
 	response["discipline"] = &disciplineModel
