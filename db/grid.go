@@ -57,8 +57,11 @@ func GetAlertsOfDay(day string, user *models.User) []*models.Alert {
 	alerts := make([]*models.Alert, 0)
 	discipline := &models.Discipline{}
 	t := time.Now()
-	GetDB().Preload("Grid").Where("week_days LIKE ?", "%"+strconv.Itoa(indexDay)+"%").First(&discipline)
-	GetDB().Find(&alerts, "grid_id = ? AND (dayofweek(date) - 1) = ? AND date > ?", discipline.Grid.ID, indexDay, t.Format("2006-01-02"))
+	begin := t.Format("2006-01-02") + " 00:00:00"
+	end := t.Format("2006-01-02") + " 23:59:59"
+	dayParam := "%" + strconv.Itoa(indexDay) + "%"
+	GetDB().Preload("Grid").Where("week_days LIKE ?", dayParam).First(&discipline)
+	GetDB().Find(&alerts, "grid_id = ? AND (dayofweek(date) - 1) = ? AND date BETWEEN ? AND ?", discipline.Grid.ID, indexDay, begin, end)
 	for _, value := range alerts {
 		value.Discipline = discipline
 	}
