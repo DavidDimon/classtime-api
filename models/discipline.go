@@ -29,15 +29,15 @@ type Discipline struct {
 DisciplineJSON struct used by update discipline with users ids
 */
 type DisciplineJSON struct {
-	Name        string
-	Term        string
-	Users       []uint
-	UsersRemove []uint
-	WeekDays    []string
-	GridID      uint
-	Classroom   string
-	BeginAt     *time.Time
-	EndAt       *time.Time
+	Name        string     `json:"name"`
+	Term        string     `json:"term"`
+	Users       []uint     `json:"users"`
+	UsersRemove []uint     `json:"usersRemove"`
+	WeekDays    []string   `json:"weekDays"`
+	GridID      uint       `json:"gridID"`
+	Classroom   string     `json:"classroom"`
+	BeginAt     *time.Time `json:"beginAt"`
+	EndAt       *time.Time `json:"endAt"`
 }
 
 /*

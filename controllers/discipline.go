@@ -5,6 +5,7 @@ import (
 	"classtime/models"
 	u "classtime/utils"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -18,6 +19,7 @@ func CreateDiscipline(w http.ResponseWriter, r *http.Request) {
 	discipline := &models.DisciplineJSON{}
 	err := json.NewDecoder(r.Body).Decode(discipline)
 	if err != nil {
+		fmt.Println(err)
 		u.Respond(w, u.Message(false, "Invalid request"))
 		return
 	}

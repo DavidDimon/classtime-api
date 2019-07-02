@@ -8,7 +8,7 @@ import (
 )
 
 func CreateDiscipline(disciplineJSON *models.DisciplineJSON) map[string]interface{} {
-	discipline := models.Discipline{}
+	discipline := &models.Discipline{}
 	discipline.Name = disciplineJSON.Name
 	discipline.Term = disciplineJSON.Term
 	discipline.Classroom = disciplineJSON.Classroom
